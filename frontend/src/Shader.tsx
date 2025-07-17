@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PromptForm from './components/PromptForm.tsx';
 import ShaderCanvas from './components/ShaderCanvas.tsx';
 import ShaderCodeDisplay from './components/ShaderCodeDisplay.tsx';
@@ -6,21 +6,20 @@ import useWebGLRenderer from './hooks/useWebGLRenderer.tsx';
 import { fetchShaderFromAPI } from './services/backend.tsx';
 
 export default function Shader() {
-  const [prompt, setPrompt] = useState('A rotating cube with a gradient background');
+  const [prompt, setPrompt] = useState('A simple rotating square');
   const [shaderData, setShaderData] = useState<ShaderData>({ vertex: '', fragment: '', vertices: 6 });
   const [apiError, setApiError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const { canvasRef, error: rendererError } = useWebGLRenderer(shaderData.vertex, shaderData.fragment, shaderData.vertices);
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+
+  const getShaderData = async (currentPrompt: string) => {
     setIsLoading(true);
     setApiError('');
     setShaderData({ vertex: '', fragment: '', vertices: 6 });
 
     try {
-      const data = await fetchShaderFromAPI(prompt);
+      const data = await fetchShaderFromAPI(currentPrompt);
       setShaderData({
         vertex: data.vertex,
         fragment: data.fragment,
@@ -31,6 +30,15 @@ export default function Shader() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  useEffect(() => {
+    getShaderData(prompt); // Call with the initial prompt
+  }, []);
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    getShaderData(prompt);
   };
 
   const displayError = apiError || rendererError;
