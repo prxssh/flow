@@ -30,7 +30,8 @@ defmodule BackendWeb.ShaderController do
 
   @spec send_error_response(Plug.Conn.t(), String.t() | :timeout) :: Plug.Conn.t()
   defp send_error_response(conn, error) do
-    {status_code, message} = if error == :timeout, do: {504, "Request Timeout!"}, else: {500, error}
+    {status_code, message} =
+      if error == :timeout, do: {504, "Request Timeout!"}, else: {500, error}
 
     conn
     |> put_status(status_code)

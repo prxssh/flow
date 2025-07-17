@@ -11,6 +11,11 @@ defmodule BackendWeb.Endpoint do
     same_site: "Lax"
   ]
 
+  plug CORSPlug,
+    origins: ["http://localhost:3000", "https://react-wasm-frontend.onrender.com"],
+    headers: ["authorization", "content-type"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+
   # socket "/live", Phoenix.LiveView.Socket,
   #   websocket: [connect_info: [session: @session_options]],
   #   longpoll: [connect_info: [session: @session_options]]

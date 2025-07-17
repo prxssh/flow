@@ -39,7 +39,8 @@ defmodule Backend.MixProject do
       {:bandit, "~> 1.5"},
       {:req, "~> 0.5.0"},
       {:proper_case, "~> 1.0.2"},
-      {:tarams, "~> 1.8"}
+      {:tarams, "~> 1.8"},
+      {:cors_plug, "~> 3.0"}
     ]
   end
 
