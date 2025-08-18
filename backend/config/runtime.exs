@@ -17,7 +17,9 @@ if config_env() in [:dev, :prod] do
 
   config :backend,
     url_gemini_api: System.fetch_env!("URL_GEMINI_API"),
-    key_gemini_api: System.fetch_env!("KEY_GEMINI_API")
+    url_claude_api: System.fetch_env!("URL_ANTHROPIC_API"),
+    key_gemini_api: System.fetch_env!("KEY_GEMINI_API"),
+    key_claude_api: System.fetch_env!("KEY_ANTHROPIC_API")
 
   config :backend, BackendWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],

@@ -3,7 +3,7 @@ defmodule Backend.Shader do
   Module that handles business logic related to generating shaders.
   """
   require Logger
-  alias Backend.Client.GeminiAPI
+  alias Backend.Client.{GeminiAPI, ClaudeAPI}
 
   @type config_t :: %{vertex: String.t(), fragment: String.t(), vertices: pos_integer()}
 
@@ -75,6 +75,7 @@ defmodule Backend.Shader do
     }
   }
 
+
   @spec generate(String.t()) :: {:ok, config_t()} | {:error, String.t() | :timeout}
   def generate(user_prompt) do
     @llm_system_prompt
@@ -91,4 +92,21 @@ defmodule Backend.Shader do
         {:error, reason}
     end
   end
+
+  @spec generate_claude(String.t()) :: {:ok, config_t()} | {:error, String.t() | :timeout}
+  def generate_claude(user_prompt) do
+    @llm_system_prompt
+    |> ClaudeAPI.generate_content(user_prompt)
+    |> case do
+      {:ok, shader_code} ->
+        {:ok, shader_code}
+
+      {:error, reason} ->
+        Logger.error(
+          "Failed to generate shader, prompt=#{inspect(user_prompt)} error=#{inspect(reason)}"
+        )
+
+        {:error, reason}
+    end
+    end
 end

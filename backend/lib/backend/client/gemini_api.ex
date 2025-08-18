@@ -2,6 +2,7 @@ defmodule Backend.Client.GeminiAPI do
   @moduledoc """
   Client for [Gemini API](https://ai.google.dev/gemini-api/docs).
   """
+  require Logger
 
   @spec generate_content(String.t(), String.t(), map()) ::
           {:ok, map()} | {:error, String.t() | :timeout}
@@ -12,8 +13,10 @@ defmodule Backend.Client.GeminiAPI do
       system_instruction: %{parts: [%{text: system_prompt}]}
     }
 
+
     client()
     |> Req.post(url: "/v1beta/models/gemini-2.5-flash:generateContent", json: body)
+    |> dbg()
     |> case do
       {:ok, response} -> response.body |> parse_body() |> Jason.decode(keys: :atoms!)
       {:error, %Req.TransportError{reason: :timeout}} -> {:error, :timeout}

@@ -12,7 +12,7 @@ defmodule BackendWeb.ShaderController do
   @spec generate_shader(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def generate_shader(conn, params) do
     with {:ok, params} <- Tarams.cast(params, @schema_generate_shader),
-         {:ok, shader_config} <- Shader.generate(params.prompt) do
+         {:ok, shader_config} <- Shader.generate_claude(params.prompt) do
       send_success_response(conn, shader_config)
     else
       {:error, reason} -> send_error_response(conn, reason)
